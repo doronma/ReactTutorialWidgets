@@ -1,12 +1,28 @@
-import React, { useState, useEffect } from 'react'
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
 
 const Search = () => {
-    const [term, setTerm] = useState('Hello');
+    const [term, setTerm] = useState('hello');
+    const [debouncedTerm, setDebouncedTerm] = useState(term);
     const [results, setResults] = useState([]);
 
+    // activated when a user press a key
+    useEffect(() => {
+        if (term) {
+            const timerId = setTimeout(() => {
+                setDebouncedTerm(term);
+            }, 1000);
+            /** useEffect can return a function that will be called before the next 
+             * time useEffect is called.
+            */
+            return () => {
+                clearTimeout(timerId);
+            };
+        }
+    }, [term]);
 
+    // activated when the first useEffect updated debouncedTerm
     useEffect(() => {
         /** useEffect is invoked firttime and when term changes
            every time term is changed.
@@ -20,38 +36,16 @@ const Search = () => {
                     list: 'search',
                     origin: '*',
                     format: 'json',
-                    srsearch: term,
+                    srsearch: debouncedTerm,
                 },
             });
             setResults(data.query.search);
         };
-
-        // If first time
-        if (term && !results.length) {
+        if (debouncedTerm) {
             search();
-        } else {
-            const timeoutId = setTimeout(() => {
-                if (term) {
-                    search();
-                }
-            }, 500);
-            /** useEffect can return a function that will be called before the next 
-             * time useEffect is called.
-            */
-            return () => {
-                clearTimeout(timeoutId)
-            };
         }
+    }, [debouncedTerm]);
 
-
-
-
-
-
-
-
-
-    }, [term]);
 
     const renderedResults = results.map((result) => {
         return (
