@@ -3,7 +3,7 @@ import axios from 'axios';
 
 
 const Search = () => {
-    const [term, setTerm] = useState('');
+    const [term, setTerm] = useState('Hello');
     const [results, setResults] = useState([]);
 
 
@@ -25,14 +25,32 @@ const Search = () => {
             });
             setResults(data.query.search);
         };
-        if (term) {
+
+        // If first time
+        if (term && !results.length) {
             search();
+        } else {
+            const timeoutId = setTimeout(() => {
+                if (term) {
+                    search();
+                }
+            }, 500);
+            /** useEffect can return a function that will be called before the next 
+             * time useEffect is called.
+            */
+            return () => {
+                clearTimeout(timeoutId)
+            };
         }
 
-        // axios.get('ab')
-        //     .then((response) => {
-        //         console.log(response.data);
-        //     })
+
+
+
+
+
+
+
+
     }, [term]);
 
     const renderedResults = results.map((result) => {
