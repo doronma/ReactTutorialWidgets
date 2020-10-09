@@ -36,6 +36,36 @@ const options = [
     }
 ];
 
+const showAccordion = () => {
+    if (window.location.pathname === '/') {
+        return <Accordion items={items} />;
+    }
+}
+
+const showList = () => {
+    if (window.location.pathname === '/list') {
+        return <Search />;
+    }
+}
+
+const ShowDropDown = () => {
+    if (window.location.pathname === '/dropdown') {
+        return <Dropdown />;
+    }
+}
+
+const showTranslate = () => {
+    if (window.location.pathname === '/translate') {
+        return <Translate />;
+    }
+}
+
 export default () => {
-    return <Translate />
+    return (<div>
+        <div>{showAccordion()} </div>
+        <div>{showList()} </div>
+        <div>{ShowDropDown()} </div>
+        <div>{showTranslate()} </div>
+    </div>
+    )
 }
